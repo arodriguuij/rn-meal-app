@@ -18,8 +18,4 @@ const CategoriesScreen = ({ navigation }) => {
 
 const style = StyleSheet.create({});
 
-CategoriesScreen.navigationOptions = {
-  headerTitle: "Meal Categories",
-};
-
 export default CategoriesScreen;

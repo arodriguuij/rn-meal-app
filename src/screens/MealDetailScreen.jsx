@@ -5,13 +5,13 @@ import MealItem from "../components/MealItem";
 import HeaderButton from "../components/HeaderButton";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-const getMealFromCategory = (navigation) => {
-  const id = navigation.getParam("id");
+const getMealFromCategory = (route) => {
+  const id = route.params?.id;
   return MEALS.find((item) => item.id === id);
 };
 
-const MealDetailScreen = ({ navigation }) => {
-  const meal = getMealFromCategory(navigation);
+const MealDetailScreen = ({ navigation, route }) => {
+  const meal = getMealFromCategory(route);
   return (
     <MealItem
       item={meal}
@@ -28,7 +28,7 @@ MealDetailScreen.navigationOptions = ({ navigation }) => {
   const meal = getMealFromCategory(navigation);
   return {
     headerTitle: meal.title,
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Favorite"

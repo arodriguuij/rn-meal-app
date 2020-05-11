@@ -8,7 +8,10 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 
-const CategoryGridTitle = ({ item: { id, title, color }, navigation }) => {
+const CategoryGridTitle = ({
+  item: { id, title, color },
+  navigation
+}) => {
   let TouchableCmp = TouchableOpacity;
   if (Platform.OS === "android" && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
@@ -17,7 +20,7 @@ const CategoryGridTitle = ({ item: { id, title, color }, navigation }) => {
     <View style={styles.gridItem}>
       <TouchableCmp
         style={{ flex: 1 }}
-        onPress={() => navigation.navigate("CategoryMeals", { categoryId: id })}
+        onPress={() => navigation.navigate("CategoryMeals", { id: id })}
       >
         <View style={{ ...styles.container, backgroundColor: color }}>
           <Text style={styles.title}>{title}</Text>

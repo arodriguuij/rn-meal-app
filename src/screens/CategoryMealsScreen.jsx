@@ -1,49 +1,26 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
 import { MEALS, CATEGORIES } from "../data/dummy-data";
-import { FlatList } from "react-native-gesture-handler";
-import MealItem from "../components/MealItem";
+import MealList from "../components/MealList";
 
-const getSelectCategory = (navigation) => {
-  const id = navigation.getParam("categoryId");
+const getSelectedCategory = (navigation) => {
+  const id = getIdFromNavigationParam(navigation);
   return CATEGORIES.find((category) => category.id === id);
 };
-const getMealsFromCategory = (navigation) => {
-  const id = navigation.getParam("categoryId");
+const getMealsFromCategory = (route) => {
+  const id = getIdFromNavigationParam(route);
   return MEALS.filter((meal) => meal.categoryIds.indexOf(id) >= 0);
 };
-
-const CategoryMealsScreen = ({ navigation }) => {
-  const meals = getMealsFromCategory(navigation);
-
-  return (
-    <View style={styles.screen}>
-      <FlatList
-        style={{ width: "100%" }}
-        data={meals}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <MealItem
-            item={item}
-            onSelectMeal={() =>
-              navigation.navigate("MealDetail", { id: item.id })
-            }
-          />
-        )}
-      />
-    </View>
-  );
+const getIdFromNavigationParam = (route) => {
+  return route.params?.id;
 };
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-});
+const CategoryMealsScreen = ({ navigation, route }) => {
+  const meals = getMealsFromCategory(route);
+  return <MealList listData={meals} navigation={navigation}/>;
+};
 
 CategoryMealsScreen.navigationOptions = ({ navigation }) => {
-  const selectedCategory = getSelectCategory(navigation);
+  const selectedCategory = getSelectedCategory(navigation);
   return {
     headerTitle: selectedCategory.title,
   };
