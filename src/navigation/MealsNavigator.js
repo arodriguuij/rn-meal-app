@@ -14,14 +14,15 @@ import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const defaultStackNavOptions = {
+  headerTitleStyle: {
+    headerLayoutPreset: "center",
+    flex: 1,
+  },
   headerStyle: {
     backgroundColor: () =>
       Platform.OS === "IOS" ? Colors.primaryColor : "white",
   },
   headerTintColor: Platform.OS === "IOS" ? "white" : Colors.primaryColor,
-  headerTitleStyle: {
-    fontWeight: "open-sans-bold",
-  },
 };
 
 const MealsNavigator = createStackNavigator();
@@ -76,10 +77,16 @@ const MealFavNavigatorScreen = () => (
         };
       }}
     />
-    <MealFavNavigation.Screen
+    <MealsNavigator.Screen
       name="MealDetail"
       component={MealDetailScreen}
-      options={defaultStackNavOptions}
+      options={({ route }) => {
+        return {
+          ...defaultStackNavOptions,
+          headerTitle: route.params.headerTitle,
+          headerRight: route.params.headerRight,
+        };
+      }}
     />
   </MealFavNavigation.Navigator>
 );
@@ -91,6 +98,21 @@ const MealsFavTabNavigationScreen = () => (
       activeTintColor: Colors.accentColor,
     }}
   >
+    {/*     <MealsNavigator.Screen
+      name="Categories"
+      component={CategoriesScreen}
+      options={({ route }) => {
+        return {
+          ...defaultStackNavOptions,
+          headerTitle: route.params?.headerTitle,
+          headerLeft: route.params?.headerLeft,
+          tabBarIcon: (tabInfo) => (
+            <Ionicons name="ios-restaurant" size={25} color={tabInfo.color} />
+          ),
+        };
+      }}
+    /> */}
+
     <MealsFavTabNavigation.Screen
       name="Meals"
       component={MealsNavigatorScreen}

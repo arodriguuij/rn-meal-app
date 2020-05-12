@@ -1,24 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { StyleSheet, ScrollView, Image, View, Text } from "react-native";
-import { MEALS } from "../data/dummy-data";
 import HeaderButton from "../components/HeaderButton";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import DefaultText from "../components/DefaultText";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleFavorite } from "../store/actions/meals.actions";
 
 const getMealFromCategory = (route) => {
-  const id = route.params?.id;
-  return MEALS.find((item) => item.id === id);
+  const id = route.params.id;
+  const meals = useSelector((state) => state.meals.meals);
+  return meals.find((item) => item.id === id);
 };
 
 const ListItem = ({ children }) => (
   <View style={styles.listItem}>
-    <DefaultText>{children}</DefaultText>
+    <Text>{children}</Text>
   </View>
 );
 
 const MealDetailScreen = ({ navigation, route }) => {
   const meal = getMealFromCategory(route);
   const headerTitle = meal.title;
+  const mealId = route.params.id;
+
+  const isCurrentMealFavorite = useSelector((state) =>
+    state.meals.favoritesMeals.some((meal) => meal.id === mealId)
+  );
+
+  const dispatch = useDispatch();
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
+  }, [dispatch, mealId]);
 
   useEffect(() => {
     navigation.setParams({
@@ -27,23 +38,21 @@ const MealDetailScreen = ({ navigation, route }) => {
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title="Favorite"
-            iconName="ios-star"
-            onPress={() => {
-              console.log("Mark as favorite!");
-            }}
+            iconName={isCurrentMealFavorite ? "ios-star" : "ios-star-outline"}
+            onPress={toggleFavoriteHandler}
           />
         </HeaderButtons>
       ),
     });
-  }, [headerTitle]);
+  }, [headerTitle, toggleFavoriteHandler, isCurrentMealFavorite]);
 
   return (
     <ScrollView>
       <Image source={{ uri: meal.imageUrl }} style={styles.image} />
       <View style={styles.details}>
-        <DefaultText>{meal.duration} min</DefaultText>
-        <DefaultText>{meal.complexity.toUpperCase()}</DefaultText>
-        <DefaultText>{meal.affordability.toUpperCase()}</DefaultText>
+        <Text>{meal.duration} min</Text>
+        <Text>{meal.complexity.toUpperCase()}</Text>
+        <Text>{meal.affordability.toUpperCase()}</Text>
       </View>
       <Text style={styles.title}>Ingredientes</Text>
       {meal.ingredients.map((ingredient) => (
@@ -59,7 +68,6 @@ const MealDetailScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontFamily: "open-sans-bold",
     fontSize: 22,
     textAlign: "center",
   },

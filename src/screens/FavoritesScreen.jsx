@@ -1,19 +1,12 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import MealList from "../components/MealList";
-import { MEALS } from "../data/dummy-data";
 import HeaderButton from "../components/HeaderButton";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useSelector } from "react-redux";
 
-const getFavMeals = ({ navigation, route }) => {
-  //const id = getIdFromNavigationParam(navigation);
-  return MEALS.filter((meal) => meal.id === "m1" || meal.id === "m2");
-};
-
-const getIdFromNavigationParam = (route) => route.params?.id;
-
-const FavoritesScreen = ({ navigation, route }) => {
-  const meals = getFavMeals(route);
+const FavoritesScreen = ({ navigation }) => {
+  const favMeals = useSelector((state) => state.meals.favoritesMeals);
 
   useEffect(() => {
     navigation.setParams({
@@ -30,9 +23,22 @@ const FavoritesScreen = ({ navigation, route }) => {
     });
   }, []);
 
-  return <MealList listData={meals} navigation={navigation} />;
+  if (favMeals.length === 0 || !favMeals) {
+    return (
+      <View style={styles.content}>
+        <Text>No Favotires meals found. Start adding some!</Text>
+      </View>
+    );
+  }
+  return <MealList listData={favMeals} navigation={navigation} />;
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default FavoritesScreen;

@@ -4,6 +4,8 @@ import HeaderButton from "../components/HeaderButton";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Switch } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
+import { useDispatch } from "react-redux";
+import { setFilters } from "../store/actions/meals.actions";
 
 const FilterSwitch = ({ label, state, onChange }) => (
   <View style={styles.filterContainer}>
@@ -23,6 +25,8 @@ const FilterScreen = ({ navigation }) => {
   const [isVegan, setIsVegan] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
 
+  const dispatch = useDispatch();
+
   const saveFilters = useCallback(() => {
     const appliedFilters = {
       glutenFree: isGlutenFree,
@@ -30,9 +34,8 @@ const FilterScreen = ({ navigation }) => {
       vega: isVegan,
       vegetarian: isVegetarian,
     };
-
-    console.log(appliedFilters);
-  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
+    dispatch(setFilters(appliedFilters));
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian, dispatch]);
 
   useEffect(() => {
     navigation.setParams({
@@ -85,12 +88,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-  },
-  title: {
-    fontFamily: "open-sans-bold",
-    fontSize: 22,
-    margin: 20,
-    textAlign: "center",
   },
   filterContainer: {
     flexDirection: "row",
