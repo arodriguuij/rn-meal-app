@@ -12,8 +12,6 @@ import FiltersScreen from "../screens/FiltersScreen";
 import Colors from "../constants/Colors";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import HeaderButton from "../components/HeaderButton";
 
 const defaultStackNavOptions = {
   headerStyle: {
@@ -21,6 +19,9 @@ const defaultStackNavOptions = {
       Platform.OS === "IOS" ? Colors.primaryColor : "white",
   },
   headerTintColor: Platform.OS === "IOS" ? "white" : Colors.primaryColor,
+  headerTitleStyle: {
+    fontWeight: "open-sans-bold",
+  },
 };
 
 const MealsNavigator = createStackNavigator();
@@ -29,31 +30,34 @@ const MealsNavigatorScreen = () => (
     <MealsNavigator.Screen
       name="Categories"
       component={CategoriesScreen}
-      options={({ navigation }) => {
+      options={({ route }) => {
         return {
           ...defaultStackNavOptions,
-          headerTitle: "Meal Categories",
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-              <Item
-                tutle="Menu"
-                iconName="ios-menu"
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </HeaderButtons>
-          ),
+          headerTitle: route.params?.headerTitle,
+          headerLeft: route.params?.headerLeft,
         };
       }}
     />
     <MealsNavigator.Screen
       name="CategoryMeals"
       component={CategoryMealsScreen}
-      options={defaultStackNavOptions}
+      options={({ route }) => {
+        return {
+          ...defaultStackNavOptions,
+          headerTitle: route.params.headerTitle,
+        };
+      }}
     />
     <MealsNavigator.Screen
       name="MealDetail"
       component={MealDetailScreen}
-      options={defaultStackNavOptions}
+      options={({ route }) => {
+        return {
+          ...defaultStackNavOptions,
+          headerTitle: route.params.headerTitle,
+          headerRight: route.params.headerRight,
+        };
+      }}
     />
   </MealsNavigator.Navigator>
 );
@@ -64,19 +68,11 @@ const MealFavNavigatorScreen = () => (
     <MealFavNavigation.Screen
       name="Favorites"
       component={FavoritesScreen}
-      options={({ navigation }) => {
+      options={({ route }) => {
         return {
           ...defaultStackNavOptions,
-          headerTitle: "Your Favorites",
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-              <Item
-                tutle="Menu"
-                iconName="ios-menu"
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </HeaderButtons>
-          ),
+          headerTitle: route.params?.headerTitle,
+          headerLeft: route.params?.headerLeft,
         };
       }}
     />
@@ -122,19 +118,11 @@ const FiltersNavigationScreen = () => (
     <FiltersNavigation.Screen
       name="Filters"
       component={FiltersScreen}
-      options={({ navigation }) => {
+      options={({ route }) => {
         return {
           ...defaultStackNavOptions,
-          headerTitle: "Filter Meals",
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-              <Item
-                tutle="Menu"
-                iconName="ios-menu"
-                onPress={() => navigation.toggleDrawer()}
-              />
-            </HeaderButtons>
-          ),
+          headerTitle: route.params?.headerTitle,
+          headerLeft: route.params?.headerLeft,
         };
       }}
     />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import MealItem from "../components/MealItem";
@@ -12,6 +12,25 @@ const getMealFromCategory = (route) => {
 
 const MealDetailScreen = ({ navigation, route }) => {
   const meal = getMealFromCategory(route);
+  const headerTitle = meal.title;
+
+  useEffect(() => {
+    navigation.setParams({
+      headerTitle,
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Favorite"
+            iconName="ios-star"
+            onPress={() => {
+              console.log("Mark as favorite!");
+            }}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, [headerTitle]);
+
   return (
     <MealItem
       item={meal}
@@ -23,23 +42,5 @@ const MealDetailScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({});
-
-MealDetailScreen.navigationOptions = ({ navigation }) => {
-  const meal = getMealFromCategory(navigation);
-  return {
-    headerTitle: meal.title,
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Favorite"
-          iconName="ios-star"
-          onPress={() => {
-            console.log("Mark as favorite!");
-          }}
-        />
-      </HeaderButtons>
-    ),
-  };
-};
 
 export default MealDetailScreen;

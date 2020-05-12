@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MEALS, CATEGORIES } from "../data/dummy-data";
 import MealList from "../components/MealList";
+import HeaderButton from "../components/HeaderButton";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 const getSelectedCategory = (navigation) => {
   const id = getIdFromNavigationParam(navigation);
@@ -16,14 +18,25 @@ const getIdFromNavigationParam = (route) => {
 
 const CategoryMealsScreen = ({ navigation, route }) => {
   const meals = getMealsFromCategory(route);
-  return <MealList listData={meals} navigation={navigation}/>;
-};
+  const selectedCategory = getSelectedCategory(route);
+  const headerTitle = selectedCategory.title;
 
-CategoryMealsScreen.navigationOptions = ({ navigation }) => {
-  const selectedCategory = getSelectedCategory(navigation);
-  return {
-    headerTitle: selectedCategory.title,
-  };
+  useEffect(() => {
+    navigation.setParams({
+      headerTitle,
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            tutle="Menu"
+            iconName="ios-menu"
+            onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, []);
+
+  return <MealList listData={meals} navigation={navigation} />;
 };
 
 export default CategoryMealsScreen;
