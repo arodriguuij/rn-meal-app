@@ -123,6 +123,7 @@ const FiltersNavigationScreen = () => (
           ...defaultStackNavOptions,
           headerTitle: route.params?.headerTitle,
           headerLeft: route.params?.headerLeft,
+          headerRight: route.params?.headerRight,
         };
       }}
     />
